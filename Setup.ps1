@@ -48,7 +48,7 @@ $chocoDeps = @(
 $psModules = @(
     "CompletionPredictor"
     "PSScriptAnalyzer"
-    "ps-arch-wsl"
+  # "ps-arch-wsl"
     "ps-color-scripts"
 )
 

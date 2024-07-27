@@ -38,6 +38,32 @@ $wingetDeps = @(
 )
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+function Get-WingetDeps {
+    <#
+    .SYNOPSIS
+        Gets the list of winget dependencies.
+    #>
+
+    # Winget & choco dependencies
+    $wingetDeps = @(
+        "chocolatey.chocolatey"
+        "eza-community.eza"
+        "ezwinports.make"
+        "fastfetch-cli.fastfetch"
+        "gerardog.gsudo"
+        "git.git"
+        "github.cli"
+        "kitware.cmake"
+        "mbuilov.sed"
+        "microsoft.powershell"
+        "neovim.neovim"
+        "openjs.nodejs"
+        "starship.starship"
+    )
+
+    return $wingetDeps
+}
+
 function Find-WindotsRepository {
     <#
     .SYNOPSIS
@@ -96,11 +122,9 @@ function Update-Software {
     param ()
 
     Write-Verbose "Updating software installed via Winget & Chocolatey"
-    <<<<<<< Updated upstream
 
-    =======
+    $wingetDeps = Get-WingetDeps
 
-    >>>>>>> Stashed changes
     sudo cache on
 
     $wingetUpdatesString = Start-Job -ScriptBlock { winget list --upgrade-available | Out-String } | Wait-Job | Receive-Job
@@ -325,8 +349,16 @@ Start-ThreadJob -ScriptBlock {
         The compromise is to run the main logic of this block within a threadjob and get the output of the winget and choco commands
         via two isolated jobs. This sets the environment variable correctly and doesn't cause any lag (that I've noticed yet).
     #>
+    $wingetDeps = Get-WingetDeps
     $wingetUpdatesString = Start-Job -ScriptBlock { winget list --upgrade-available | Out-String } | Wait-Job | Receive-Job
-    $filteredUpdates = $wingetUpdatesString -split "`n" | Where-Object { $_ -match ($wingetDeps -join '|') }
+    $filteredUpdates = $wingetUpdatesString -split "`n" | Where-Object {
+        foreach ($dep in $wingetDeps) {
+            if ($_ -match $dep) {
+                return $true
+            }
+        }
+        return $false
+    }
     $chocoUpdatesString = Start-Job -ScriptBlock { choco upgrade all --noop -y | Out-String } | Wait-Job | Receive-Job
     if ($filteredUpdates.Length -gt 0 -or $chocoUpdatesString -notmatch "can upgrade 0/") {
         $ENV:SOFTWARE_UPDATE_AVAILABLE = "`u{eb29} "

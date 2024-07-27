@@ -2,6 +2,7 @@
 local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 local opacity = 0.9
+local transparent_bg = "rgba(22, 24, 26, " .. opacity .. ")"
 
 -- Font
 config.font = wezterm.font_with_fallback({
@@ -37,7 +38,7 @@ config.hide_tab_bar_if_only_one_tab = true
 config.show_tab_index_in_tab_bar = false
 config.use_fancy_tab_bar = false
 config.colors.tab_bar = {
-    background = config.colors.background,
+    background = transparent_bg,
     new_tab = { fg_color = config.colors.background, bg_color = config.colors.brights[6] },
     new_tab_hover = { fg_color = config.colors.background, bg_color = config.colors.foreground },
 }

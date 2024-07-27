@@ -96,7 +96,11 @@ function Update-Software {
     param ()
 
     Write-Verbose "Updating software installed via Winget & Chocolatey"
+    <<<<<<< Updated upstream
 
+    =======
+
+    >>>>>>> Stashed changes
     sudo cache on
 
     $wingetUpdatesString = Start-Job -ScriptBlock { winget list --upgrade-available | Out-String } | Wait-Job | Receive-Job

@@ -10,10 +10,12 @@
     },
     "display": {
         "separator": "",
-        "keyWidth": 15,
         "color": {
             "keys": "white",
             "title": "cyan"
+        },
+        "key":{
+            "width": 15
         }
     },
     "modules": [

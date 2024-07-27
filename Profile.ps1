@@ -18,9 +18,8 @@ Set-Alias -Name vi -Value nvim
 Set-Alias -Name vim -Value nvim
 Set-Alias -Name which -Value Show-Command
 
-<<<<<<< Updated upstream
 # Putting the FUN in Functions!
-=======
+
 # Winget & choco dependencies
 $wingetDeps = @(
     "chocolatey.chocolatey"
@@ -38,8 +37,6 @@ $wingetDeps = @(
     "starship.starship"
 )
 
-# Putting the FUN in Functions
->>>>>>> Stashed changes
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 function Find-WindotsRepository {
     <#
@@ -99,7 +96,7 @@ function Update-Software {
     param ()
 
     Write-Verbose "Updating software installed via Winget & Chocolatey"
-    
+
     sudo cache on
 
     $wingetUpdatesString = Start-Job -ScriptBlock { winget list --upgrade-available | Out-String } | Wait-Job | Receive-Job

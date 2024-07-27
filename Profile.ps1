@@ -18,7 +18,28 @@ Set-Alias -Name vi -Value nvim
 Set-Alias -Name vim -Value nvim
 Set-Alias -Name which -Value Show-Command
 
+<<<<<<< Updated upstream
 # Putting the FUN in Functions!
+=======
+# Winget & choco dependencies
+$wingetDeps = @(
+    "chocolatey.chocolatey"
+    "eza-community.eza"
+    "ezwinports.make"
+    "fastfetch-cli.fastfetch"
+    "gerardog.gsudo"
+    "git.git"
+    "github.cli"
+    "kitware.cmake"
+    "mbuilov.sed"
+    "microsoft.powershell"
+    "neovim.neovim"
+    "openjs.nodejs"
+    "starship.starship"
+)
+
+# Putting the FUN in Functions
+>>>>>>> Stashed changes
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 function Find-WindotsRepository {
     <#
@@ -42,6 +63,9 @@ function Update-Profile {
         Gets the latest changes from git, reruns the setup script and reloads the profile.
         Note that functions won't be updated, this requires a full PS session restart. Alias: up
     #>
+    [CmdletBinding()]
+    param ()
+
     Write-Verbose "Storing current working directory in memory"
     $currentWorkingDirectory = $PWD
 
@@ -71,9 +95,25 @@ function Update-Software {
     .SYNOPSIS
         Updates all software installed via Winget & Chocolatey. Alias: us
     #>
+    [CmdletBinding()]
+    param ()
+
     Write-Verbose "Updating software installed via Winget & Chocolatey"
+    
     sudo cache on
-    sudo winget upgrade --all --include-unknown --silent --verbose
+
+    $wingetUpdatesString = Start-Job -ScriptBlock { winget list --upgrade-available | Out-String } | Wait-Job | Receive-Job
+    $filteredUpdates = $wingetUpdatesString -split "`n" | Where-Object { $_ -match ($wingetDeps -join '|') }
+
+    # Update winget packages from the filtered list
+    if ($filteredUpdates.Length -gt 0) {
+        foreach ($update in $filteredUpdates) {
+            $packageId = ($update -split '\s+')[1]  # Extract the package ID
+            Write-Verbose "Updating $packageId via Winget"
+            sudo winget upgrade --id $packageId --silent --verbose
+        }
+    }
+
     sudo choco upgrade all -y
     sudo -k
     $ENV:SOFTWARE_UPDATE_AVAILABLE = ""
@@ -285,8 +325,9 @@ Start-ThreadJob -ScriptBlock {
         via two isolated jobs. This sets the environment variable correctly and doesn't cause any lag (that I've noticed yet).
     #>
     $wingetUpdatesString = Start-Job -ScriptBlock { winget list --upgrade-available | Out-String } | Wait-Job | Receive-Job
+    $filteredUpdates = $wingetUpdatesString -split "`n" | Where-Object { $_ -match ($wingetDeps -join '|') }
     $chocoUpdatesString = Start-Job -ScriptBlock { choco upgrade all --noop -y | Out-String } | Wait-Job | Receive-Job
-    if ($wingetUpdatesString -match "upgrades available" -or $chocoUpdatesString -notmatch "can upgrade 0/") {
+    if ($filteredUpdates.Length -gt 0 -or $chocoUpdatesString -notmatch "can upgrade 0/") {
         $ENV:SOFTWARE_UPDATE_AVAILABLE = "`u{eb29} "
     }
     else {

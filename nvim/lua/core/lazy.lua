@@ -25,7 +25,7 @@ require("lazy").setup({
     ui = {
         title = " lazy.nvim 💤",
         border = "rounded",
-        pills = false,
+        pills = true,
     },
     performance = {
         rtp = {

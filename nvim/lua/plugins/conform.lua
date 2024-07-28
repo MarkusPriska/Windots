@@ -1,13 +1,22 @@
 return {
     "stevearc/conform.nvim",
     event = "BufReadPre",
+    keys = {
+        {
+            -- Customize or remove this keymap to your liking
+            "<leader>cf",
+            function()
+                require("conform").format({ async = true })
+            end,
+            mode = "",
+            desc = "Format buffer",
+        },
+    },
     config = function()
-        vim.g.disable_autoformat = false
+        vim.g.disable_autoformat = true
         require("conform").setup({
             formatters_by_ft = {
-                bicep = { "bicep" },
                 css = { "prettier" },
-                go = { "goimports_reviser", "gofmt", "golines" },
                 html = { "prettier" },
                 javascript = { "prettier" },
                 json = { "prettier" },
@@ -15,9 +24,7 @@ return {
                 markdown = { "prettier" },
                 ps1 = { "powershell", "trim_whitespace", "trim_newlines" },
                 scss = { "prettier" },
-                sh = { "shfmt" },
-                toml = { "taplo" },
-                yaml = { "prettier" },
+                python = { "black" },
             },
 
             format_after_save = function()
@@ -49,11 +56,6 @@ return {
             },
         })
 
-        -- Override bicep's default indent size
-        require("conform").formatters.bicep = {
-            args = { "format", "--stdout", "$FILENAME", "--indent-size", "4" },
-        }
-
         -- Override stylua's default indent type
         require("conform").formatters.stylua = {
             prepend_args = { "--indent-type", "Spaces" },
@@ -62,6 +64,11 @@ return {
         -- Override prettier's default indent type
         require("conform").formatters.prettier = {
             prepend_args = { "--tab-width", "4" },
+        }
+
+        -- Override blacks defualt args
+        require("conform").formatters.black = {
+            prepend_args = { "--fast", "--skip-string-normalization", "--line-length", "120" },
         }
 
         -- Toggle format on save

@@ -1,5 +1,5 @@
 local size = function()
-    return vim.o.columns * 0.5
+    return vim.o.lines * 0.5
 end
 
 return {
@@ -10,7 +10,7 @@ return {
     },
     opts = {
         shade_terminals = true,
-        direction = "vertical",
+        direction = "horizontal",
         float_opts = {
             -- Hide border
             border = "none",

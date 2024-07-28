@@ -38,45 +38,10 @@ return {
             "dockerls",
             "html",
             "jsonls",
-            "tailwindcss",
-            "taplo",
-            "yamlls",
         }
         for _, server in pairs(no_config_servers) do
             require("lspconfig")[server].setup({})
         end
-
-        -- Go
-        require("lspconfig").gopls.setup({
-            settings = {
-                gopls = {
-                    completeUnimported = true,
-                    analyses = {
-                        unusedparams = true,
-                    },
-                    staticcheck = true,
-                },
-            },
-        })
-
-        -- Templ
-        require("lspconfig").templ.setup({})
-        vim.filetype.add({
-            extension = {
-                templ = "templ",
-            },
-        })
-
-        -- Bicep
-        local bicep_path = vim.fn.stdpath("data") .. "/mason/packages/bicep-lsp/bicep-lsp.cmd"
-        require("lspconfig").bicep.setup({
-            cmd = { bicep_path },
-        })
-        vim.filetype.add({
-            extension = {
-                bicepparam = "bicep",
-            },
-        })
 
         -- C#
         local omnisharp_path = vim.fn.stdpath("data") .. "/mason/packages/omnisharp/libexec/omnisharp.dll"
@@ -112,6 +77,38 @@ return {
         local bundle_path = mason_registry.get_package("powershell-editor-services"):get_install_path()
         require("lspconfig").powershell_es.setup({
             bundle_path = bundle_path,
+        })
+
+        -- Pyright
+        require("lspconfig").pyright.setup({
+            capabilities = (function()
+                local capabilities = vim.lsp.protocol.make_client_capabilities()
+                capabilities.textDocument.publishDiagnostics.tagSupport.valueSet = { 2 }
+                return capabilities
+            end)(),
+            settings = {
+                python = {
+                    analysis = {
+                        useLibraryCodeForTypes = true,
+                        diagnosticSeverityOverrides = {
+                            reportUnusedVariable = "warning", -- or anything
+                        },
+                        typeCheckingMode = "off", -- Disable type checking
+                    },
+                },
+            },
+        })
+
+        -- Ruff
+        require("lspconfig").ruff_lsp.setup({
+            on_attach = function(client, _)
+                client.server_capabilities.hoverProvider = false
+            end,
+            init_options = {
+                settings = {
+                    args = { "--ignore=F405,F403,F401" },
+                },
+            },
         })
     end,
 }

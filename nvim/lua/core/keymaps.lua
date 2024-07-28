@@ -54,7 +54,7 @@ map("n", "H", ":bprevious<cr>", { desc = "Previous buffer" })
 map("n", "<leader>l", ":Lazy<cr>", { desc = "Lazy" })
 
 -- AI
-map("n", "<leader>at", ":Copilot toggle<cr>", { desc = "Toggle (Copilot Inline)" })
+map("n", "<leader>at", ":SupermavenToggle<cr>", { desc = "Toggle (Supermaven Inline)" })
 
 -- Telescope
 map("n", "<leader>ff", ":Telescope find_files<cr>", { desc = "Fuzzy find files" })
@@ -85,6 +85,9 @@ map("o", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev search result
 
 -- quit
 map("n", "<leader>qq", ":qa<cr>", { desc = "Quit all" })
+
+-- save file
+map({ "i", "x", "n", "s" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save File" })
 
 -- windows
 map("n", "<leader>ww", "<C-W>p", { desc = "Other window", remap = true })

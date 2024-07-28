@@ -13,26 +13,20 @@ return {
         })
 
         local mason_packages = {
-            "bicep-lsp",
             "docker-compose-language-service",
             "dockerfile-language-server",
-            "goimports-reviser",
-            "golines",
-            "gopls",
             "html-lsp",
-            "jq",
             "json-lsp",
             "lua-language-server",
             "markdownlint-cli2",
             "omnisharp",
             "powershell-editor-services",
             "prettier",
-            "shfmt",
             "stylua",
-            "tailwindcss-language-server",
-            "taplo",
-            "templ",
-            "yaml-language-server",
+            "pyright",
+            "black",
+            "ruff-lsp",
+            "ruff",
         }
 
         local mr = require("mason-registry")

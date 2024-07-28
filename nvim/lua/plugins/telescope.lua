@@ -103,6 +103,9 @@ return {
                         ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
                         ["<cr>"] = select_one_or_multi,
                     },
+                    n = {
+                        ["q"] = actions.close,
+                    },
                 },
             },
         })

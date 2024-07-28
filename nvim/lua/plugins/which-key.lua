@@ -8,6 +8,9 @@ return {
             icons = {
                 rules = false,
             },
+            win = { 
+                no_overlap = false,
+            },
         })
         wk.add({
             {
@@ -24,7 +27,7 @@ return {
                 { "<leader>r", group = "run" },
                 { "<leader>rl", group = "lua" },
                 { "<leader>s", group = "search" },
-                { "<leader>t", group = "toggle" },
+                { "<leader>t", group = "terminal" },
                 { "<leader>w", group = "windows" },
                 { "<leader>x", group = "diagnostics/quickfix" },
             },

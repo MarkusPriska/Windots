@@ -1,10 +1,12 @@
 return {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
-    dependencies = { "echasnovski/mini.icons" },
+    dependencies = { "echasnovski/mini.icons", "rcarriga/nvim-notify" },
     opts = function()
         local utils = require("core.utils")
-        local copilot_colors = {
+        local api = require("supermaven-nvim.api")
+
+        local supermaven_colors = {
             [""] = utils.get_hlgroup("Comment"),
             ["Normal"] = utils.get_hlgroup("Comment"),
             ["Warning"] = utils.get_hlgroup("DiagnosticError"),
@@ -17,7 +19,7 @@ return {
             toggleterm = { name = "terminal", icon = "🐚" },
             mason = { name = "mason", icon = "🔨" },
             TelescopePrompt = { name = "telescope", icon = "🔍" },
-            ["copilot-chat"] = { name = "copilot", icon = "🤖" },
+            ["supermaven"] = { name = "supermaven", icon = "🚀" }, -- Placeholder icon for supermaven
         }
 
         return {
@@ -134,19 +136,19 @@ return {
                     {
                         function()
                             local icon = " "
-                            local status = require("copilot.api").status.data
-                            return icon .. (status.message or "")
+                            return icon
                         end,
                         cond = function()
-                            local ok, clients = pcall(vim.lsp.get_clients, { name = "copilot", bufnr = 0 })
-                            return ok and #clients > 0
+                            local is_loaded = api.is_running()
+                            return is_loaded
                         end,
                         color = function()
-                            if not package.loaded["copilot"] then
+                            if not package.loaded["supermaven-nvim"] then
+                                require("notify")("Supermaven is not loaded", "info", { title = "Supermaven" })
                                 return
                             end
-                            local status = require("copilot.api").status.data
-                            return copilot_colors[status.status] or copilot_colors[""]
+                            local status = api.is_running() and "Normal" or "Warning"
+                            return supermaven_colors[status] or supermaven_colors[""]
                         end,
                     },
                     { "diff" },

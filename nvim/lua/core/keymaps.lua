@@ -66,6 +66,10 @@ map("n", "<leader>ft", ":Telescope<cr>", { desc = "Other pickers..." })
 map("n", "<leader>fS", ":Telescope resession<cr>", { desc = "Find Session" })
 map("n", "<leader><leader>", ":Telescope smart_open<cr>", { desc = "Smart open" })
 map("n", "<leader>fh", ":Telescope help_tags<cr>", { desc = "Find help tags" })
+map("n", "<leader>fC", function()
+    require("telescope.builtin").find_files({ cwd = vim.fn.stdpath("config") })
+end, { desc = "Open Neovim Config Folder" })
+
 -- stylua: ignore start
 map("n", "<leader>df", function() utils.telescope_diff_file() end, { desc = "Diff file with current buffer" })
 map("n", "<leader>dr", function() utils.telescope_diff_file(true) end, { desc = "Diff recent file with current buffer" })

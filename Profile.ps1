@@ -23,19 +23,19 @@ Set-Alias -Name which -Value Show-Command
 # Remove-Item Alias:gm -ErrorAction SilentlyContinue
 # Remove-Item Alias:gco -ErrorAction SilentlyContinue
 
-# function git_status { git status $args }; 
-# function git_add { git add $args }; 
-# function git_commit { git commit -v $args }; 
-# function git_checkout { git checkout $args }; 
-# function git_push { git push $args }; 
-# function git_merge { git merge $args }; 
+function git_status { git status $args }; 
+function git_add { git add $args }; 
+function git_commit { git commit -v $args }; 
+function git_checkout { git checkout $args }; 
+function git_push { git push $args }; 
+function git_merge { git merge $args }; 
 
-# Set-Alias -Name gst -Value git_status
-# Set-Alias -Name ga -Value git_add
-# Set-Alias -Name gc -Value git_commit
-# Set-Alias -Name gco -Value git_checkout
-# Set-Alias -Name gp -Value git_push
-# Set-Alias -Name gm -Value git_merge
+Set-Alias -Name gst -Value git_status
+Set-Alias -Name ga -Value git_add
+Set-Alias -Name gc -Value git_commit
+Set-Alias -Name gco -Value git_checkout
+Set-Alias -Name gp -Value git_push
+Set-Alias -Name gm -Value git_merge
 
 # Putting the FUN in Functions!
 

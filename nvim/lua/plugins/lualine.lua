@@ -1,5 +1,5 @@
 return {
-    "nvim-lualine/lualine.nvim",
+   "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
     dependencies = { "echasnovski/mini.icons", "rcarriga/nvim-notify" },
     opts = function()
@@ -19,7 +19,6 @@ return {
             toggleterm = { name = "terminal", icon = "🐚" },
             mason = { name = "mason", icon = "🔨" },
             TelescopePrompt = { name = "telescope", icon = "🔍" },
-            ["supermaven"] = { name = "supermaven", icon = "🚀" }, -- Placeholder icon for supermaven
         }
 
         return {

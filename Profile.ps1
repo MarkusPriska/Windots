@@ -18,11 +18,6 @@ Set-Alias -Name vi -Value nvim
 Set-Alias -Name vim -Value nvim
 Set-Alias -Name which -Value Show-Command
 
-# Remove-Item Alias:gc -ErrorAction SilentlyContinue
-# Remove-Item Alias:gp -ErrorAction SilentlyContinue
-# Remove-Item Alias:gm -ErrorAction SilentlyContinue
-# Remove-Item Alias:gco -ErrorAction SilentlyContinue
-
 function git_status { git status $args }; 
 function git_add { git add $args }; 
 function git_commit { git commit -v $args }; 
@@ -30,12 +25,15 @@ function git_checkout { git checkout $args };
 function git_push { git push $args }; 
 function git_merge { git merge $args }; 
 
-Set-Alias -Name gst -Value git_status
-Set-Alias -Name ga -Value git_add
-Set-Alias -Name gc -Value git_commit
-Set-Alias -Name gco -Value git_checkout
-Set-Alias -Name gp -Value git_push
-Set-Alias -Name gm -Value git_merge
+Set-Alias -Name gst -Value git_status -Force
+Set-Alias -Name ga -Value git_add -Force
+Set-Alias -Name gc -Value git_commit -Force
+Set-Alias -Name gco -Value git_checkout -Force
+Set-Alias -Name gp -Value git_push -Force
+Set-Alias -Name gm -Value git_merge -Force
+
+Set-Alias -name activate -value Start-Python-Venv
+Set-Alias -name windots -value Set-WindotsLocation
 
 # Putting the FUN in Functions!
 
@@ -57,6 +55,43 @@ $wingetDeps = @(
 )
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+function Set-WindotsLocation {
+    <#
+        .SYNOPSIS
+            Changes the current directory to Windots.
+        .DESCRIPTION
+            Changes the current directory to Windots, the root directory of the Windots repository.
+        .EXAMPLE
+            GoTo-Windots
+            Changes the current directory to Windots.
+    #>
+
+    Set-Location -Path $ENV:WindotsLocalRepo
+}
+
+function Start-Python-Venv {
+    # Define possible virtual environment folder names
+    $venvFolders = @('.venv', 'venv')
+
+    # Find the virtual environment folder in the current directory
+    $venvFolder = $venvFolders | ForEach-Object {
+        if (Test-Path -Path $_ && (Test-Path -Path "$_\Scripts\Activate.ps1")) {
+            return $_
+        }
+    } | Select-Object -First 1
+
+    if ($venvFolder) {
+        # Construct the path to the Activate.ps1 script
+        $activateScript = Join-Path -Path $venvFolder -ChildPath 'Scripts\Activate.ps1'
+
+        # Activate the virtual environment
+        Write-Verbose "Activating virtual environment: $venvFolder"
+        . $activateScript
+    } else {
+        Write-Verbose "No virtual environment found in the current directory."
+    }
+}
+
 function Get-WingetDeps {
     <#
     .SYNOPSIS

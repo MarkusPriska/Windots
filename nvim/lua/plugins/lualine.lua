@@ -1,7 +1,7 @@
 return {
    "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
-    dependencies = { "echasnovski/mini.icons", "rcarriga/nvim-notify" },
+    dependencies = { "echasnovski/mini.icons" },
     opts = function()
         local utils = require("core.utils")
         local api = require("supermaven-nvim.api")
@@ -129,18 +129,7 @@ return {
                 lualine_x = {
                     {
                         function()
-                            local python_path = utils.get_python_path()
-                            local python_version = utils.get_python_version(python_path)
-
-                            python_path = python_path:gsub("\\", "/")
-
-                            local is_venv = python_path:match(".*/.venv") or python_path:match(".*/venv")
-                            if is_venv then
-                                local folder_name = is_venv:match("([^\\/]+)[\\/][^\\/]*%.venv$")
-                                return string.format(".venv %s (%s)", python_version, folder_name)
-                            end
-
-                            return python_version
+                            return utils.get_python_lualine()
                         end,
                         icon = ' ',
                         color = { fg = '#ff8800', gui = 'bold' },

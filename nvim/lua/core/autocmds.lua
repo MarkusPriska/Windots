@@ -48,12 +48,18 @@ autocmd("FileType", {
         "checkhealth",
         "copilot-chat",
     },
-    callback = function(event)  
+    callback = function(event)
         vim.bo[event.buf].buflisted = false
         vim.keymap.set("n", "q", "<cmd>close<cr>", {
             buffer = event.buf,
             silent = true,
             desc = "Quit buffer",
         })
+    end,
+})
+
+autocmd({ "BufEnter", "BufWinEnter", "VimEnter", "FocusGained", "FocusLost" }, {
+    callback = function()
+        utils.update_python_lualine()
     end,
 })

@@ -7,9 +7,6 @@ return {
     opts = {
         shade_terminals = true,
         direction = "horizontal",
-        float_opts = {
-            -- Hide border
-            border = "none",
-        },
+        size = vim.o.lines * 0.3,
     },
 }

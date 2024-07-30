@@ -231,4 +231,23 @@ function M.run_shell_script()
     require("toggleterm").exec(script)
 end
 
+--- Get current python path
+function M.get_python_path()
+  -- Execute the Vim script command to get the path
+  local python_path = vim.api.nvim_exec2('echo exepath("python")', { output = true })
+  -- Print the path
+  return python_path.output
+end
+
+--- Get version of python at path
+function M.get_python_version(python_path)
+  -- Execute the command to get the Python version
+  local handle = io.popen(python_path .. ' --version 2>&1')
+  local result = handle:read('*a')
+  handle:close()
+
+  -- Extract the version number from the output
+  return result:match('Python%s+([%d%.]+)')
+end
+
 return M

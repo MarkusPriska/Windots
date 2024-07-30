@@ -122,6 +122,9 @@ map("n", "gd", function() require("telescope.builtin").lsp_definitions({ reuse_w
 map("n", "gy", function() require("telescope.builtin").lsp_type_definitions({ reuse_win = true }) end, { desc = "Goto Type Definition" })
 -- stylua: ignore end
 
+-- Terminal
+map("t", "<esc>", [[<C-\><C-N>]], { desc = "Goto Normal Mode" })
+
 -- Lazygit
 map("n", "<leader>gg", function()
     local term = require("toggleterm.terminal").Terminal

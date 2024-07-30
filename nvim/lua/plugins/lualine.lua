@@ -128,6 +128,25 @@ return {
                 },
                 lualine_x = {
                     {
+                        function()
+                            local python_path = utils.get_python_path()
+                            local python_version = utils.get_python_version(python_path)
+
+                            python_path = python_path:gsub("\\", "/")
+
+                            local is_venv = python_path:match(".*/.venv") or python_path:match(".*/venv")
+                            if is_venv then
+                                local folder_name = is_venv:match("([^\\/]+)[\\/][^\\/]*%.venv$")
+                                return string.format(".venv %s (%s)", python_version, folder_name)
+                            end
+
+                            return python_version
+                        end,
+                        icon = ' ',
+                        color = { fg = '#ff8800', gui = 'bold' },
+                        cond = function() return vim.bo.filetype == "python" end,
+                    },
+                    {
                         require("lazy.status").updates,
                         cond = require("lazy.status").has_updates,
                         color = utils.get_hlgroup("String"),

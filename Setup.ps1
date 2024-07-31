@@ -103,6 +103,7 @@ git config --global --unset user.email | Out-Null
 git config --global --unset user.name | Out-Null
 git config --global user.email $currentGitEmail | Out-Null
 git config --global user.name $currentGitName | Out-Null
+git config --global core.whitespace cr-at-eol | Out-Null
 
 # Install bat themes
 bat cache --clear

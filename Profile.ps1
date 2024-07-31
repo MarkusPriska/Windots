@@ -25,12 +25,20 @@ function git_checkout { git checkout $args };
 function git_push { git push $args }; 
 function git_merge { git merge $args }; 
 
-Set-Alias -Name gst -Value git_status
-Set-Alias -Name ga -Value git_add
-Set-Alias -Name gc -Value git_commit
-Set-Alias -Name gco -Value git_checkout
-Set-Alias -Name gp -Value git_push
-Set-Alias -Name gm -Value git_merge
+Remove-Item Alias:gc -ErrorAction SilentlyContinue
+Remove-Item Alias:gp -ErrorAction SilentlyContinue
+Remove-Item Alias:gm -ErrorAction SilentlyContinue
+Remove-Item Alias:clc -ErrorAction SilentlyContinue
+
+
+Set-Alias -Name gst -Value git_status -Force
+Set-Alias -Name ga -Value git_add -Force
+Set-Alias -Name gc -Value git_commit -Force
+Set-Alias -Name gco -Value git_checkout -Force
+Set-Alias -Name gp -Value git_push -Force
+Set-Alias -Name gm -Value git_merge -Force
+
+Set-Alias -Name clc -Value Clear-Console -Force
 
 # Putting the FUN in Functions!
 
@@ -52,6 +60,15 @@ $wingetDeps = @(
 )
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+function Clear-Console {
+    <#
+    .SYNOPSIS
+        Clears the console and runs fastfetch.
+    #>
+    Clear-Host
+    fastfetch
+}
+
 function Get-WingetDeps {
     <#
     .SYNOPSIS

@@ -31,14 +31,14 @@ Remove-Item Alias:gm -ErrorAction SilentlyContinue
 Remove-Item Alias:clc -ErrorAction SilentlyContinue
 
 
-Set-Alias -Name gst -Value git_status -Force -Force
-Set-Alias -Name ga -Value git_add -Force -Force
-Set-Alias -Name gc -Value git_commit -Force -Force
-Set-Alias -Name gco -Value git_checkout -Force -Force
-Set-Alias -Name gp -Value git_push -Force -Force
+Set-Alias -Name gst -Value git_status -Force
+Set-Alias -Name ga -Value git_add -Force
+Set-Alias -Name gc -Value git_commit -Force
+Set-Alias -Name gco -Value git_checkout -Force
+Set-Alias -Name gp -Value git_push -Force
 Set-Alias -Name gm -Value git_merge -Force
 
-Set-Alias -Name clc -Value Clear-Console -Force -Force
+Set-Alias -Name clc -Value Clear-Console -Force
 
 Set-Alias -name activate -value Start-Python-Venv
 Set-Alias -name windots -value Set-WindotsLocation

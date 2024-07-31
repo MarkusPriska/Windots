@@ -22,6 +22,10 @@ symbol = " "
 [nodejs]
 detect_extensions = []
 
+[python]
+symbol = " "
+style = "bold blue"
+
 [git_metrics]
 disabled = false
 format = '(([ $added ]($added_style))([ $deleted ]($deleted_style)))'

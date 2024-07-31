@@ -32,6 +32,13 @@ return {
         end,
         desc = "Buffer Explorer",
       },
+      {
+        "<leader>eC",
+        function()
+          require("neo-tree.command").execute({ toggle = true, dir = vim.fn.stdpath('config') })
+        end,
+        desc = "Explorer NeoTree (Config Dir)",
+      },
     },
     deactivate = function()
       vim.cmd([[Neotree close]])

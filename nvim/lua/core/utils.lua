@@ -225,4 +225,68 @@ function M.telescope_diff_from_history()
     })
 end
 
+--- Run current file inside toggleterm
+function M.run_shell_script()
+    local script = vim.fn.expand("%:p")
+    require("toggleterm").exec(script)
+end
+
+--- Get current python path
+function M.get_python_path()
+    -- Execute the Vim script command to get the path
+    local python_path = vim.api.nvim_exec2('echo exepath("python")', { output = true })
+    -- Print the path
+    return python_path.output
+end
+
+--- Get version of python at path
+function M.get_python_version(python_path)
+    -- Execute the command to get the Python version
+    local handle = io.popen(python_path .. " --version 2>&1")
+    local result = handle:read("*a")
+    handle:close()
+
+    -- Extract the version number from the output
+    return result:match("Python%s+([%d%.]+)")
+end
+
+
+-- Cache table
+local cache = {
+    cached_value = "",
+    update_pending = false,
+}
+
+-- Helper function to update the cache value
+local function update_cache_value()
+    local python_path = M.get_python_path()
+    local python_version = M.get_python_version(python_path)
+
+    python_path = python_path:gsub("\\", "/")
+
+    local is_venv = python_path:match(".*/.venv") or python_path:match(".*/venv")
+    if is_venv then
+        local folder_name = is_venv:match("([^\\/]+)[\\/][^\\/]*%.venv$")
+        cache.cached_value = string.format(".venv %s (%s)", python_version, folder_name)
+    else
+        cache.cached_value = python_version
+    end
+end
+
+-- Function to update the cache with a delay
+function M.update_python_lualine()
+    if not cache.update_pending then
+        cache.update_pending = true
+        vim.defer_fn(function()
+            update_cache_value()
+            cache.update_pending = false
+        end, 3000)  -- 3000 milliseconds = 3 seconds
+    end
+end
+
+-- Function to get the cached value
+function M.get_python_lualine()
+    return cache.cached_value
+end
+
 return M

@@ -66,6 +66,10 @@ map("n", "<leader>ft", ":Telescope<cr>", { desc = "Other pickers..." })
 map("n", "<leader>fS", ":Telescope resession<cr>", { desc = "Find Session" })
 map("n", "<leader><leader>", ":Telescope smart_open<cr>", { desc = "Smart open" })
 map("n", "<leader>fh", ":Telescope help_tags<cr>", { desc = "Find help tags" })
+map("n", "<leader>fC", function()
+    require("telescope.builtin").find_files({ cwd = vim.fn.stdpath("config") })
+end, { desc = "Open Neovim Config Folder" })
+
 -- stylua: ignore start
 map("n", "<leader>df", function() utils.telescope_diff_file() end, { desc = "Diff file with current buffer" })
 map("n", "<leader>dr", function() utils.telescope_diff_file(true) end, { desc = "Diff recent file with current buffer" })
@@ -119,6 +123,9 @@ map("n", "gd", function() require("telescope.builtin").lsp_definitions({ reuse_w
 map("n", "gy", function() require("telescope.builtin").lsp_type_definitions({ reuse_win = true }) end, { desc = "Goto Type Definition" })
 -- stylua: ignore end
 
+-- Terminal
+map("t", "<esc>", [[<C-\><C-N>]], { desc = "Goto Normal Mode" })
+
 -- Lazygit
 map("n", "<leader>gg", function()
     local term = require("toggleterm.terminal").Terminal
@@ -131,5 +138,8 @@ map("n", "<leader>gg", function()
 end, { desc = "Lazygit" })
 
 -- Run...
+-- stylua: ignore start
 map("n", "<leader>rlf", ":luafile %<cr>", { desc = "Run Current Lua File" })
 map("n", "<leader>rlt", ":PlenaryBustedFile %<cr>", { desc = "Run Lua Test File" })
+map("n", "<leader>rss", function() utils.run_shell_script() end, { desc = "Run shell script (bash, powershell, etc)" })
+-- stylua: ignore end

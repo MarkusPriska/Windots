@@ -1,7 +1,7 @@
 return {
-    "nvim-lualine/lualine.nvim",
+   "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
-    dependencies = { "echasnovski/mini.icons", "rcarriga/nvim-notify" },
+    dependencies = { "echasnovski/mini.icons" },
     opts = function()
         local utils = require("core.utils")
         local api = require("supermaven-nvim.api")
@@ -19,7 +19,6 @@ return {
             toggleterm = { name = "terminal", icon = "🐚" },
             mason = { name = "mason", icon = "🔨" },
             TelescopePrompt = { name = "telescope", icon = "🔍" },
-            ["supermaven"] = { name = "supermaven", icon = "🚀" }, -- Placeholder icon for supermaven
         }
 
         return {
@@ -128,6 +127,14 @@ return {
                     },
                 },
                 lualine_x = {
+                    {
+                        function()
+                            return utils.get_python_lualine()
+                        end,
+                        icon = ' ',
+                        color = { fg = '#ff8800', gui = 'bold' },
+                        cond = function() return vim.bo.filetype == "python" end,
+                    },
                     {
                         require("lazy.status").updates,
                         cond = require("lazy.status").has_updates,

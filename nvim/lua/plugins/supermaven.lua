@@ -1,7 +1,7 @@
 return {
     {
     "supermaven-inc/supermaven-nvim",
-    event = "VeryLazy",
+    event="VeryLazy",
     config = function()
       require("supermaven-nvim").setup({
         keymaps = {
@@ -9,6 +9,7 @@ return {
           clear_suggestion = "<A-c>",
           accept_word = "<A-w>",
         },
+        log_level = "off",
       })
     end,
     },
@@ -19,5 +20,4 @@ return {
         { "<s-tab>", false, mode = { "i", "s" } },
       },
     },
-  }
-  
+}

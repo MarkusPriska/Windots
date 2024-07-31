@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://github.com/scottmckendry/Windots/commit">
-    <img alt="LastCommit" src="https://img.shields.io/github/last-commit/scottmckendry/windots/main?style=for-the-badge&logo=github&color=%237dcfff">
+    <img alt="LastCommit" src="https://img.shields.io/github/last-commit/markuspriska/windots/main?style=for-the-badge&logo=github&color=%237dcfff">
   </a>
   <a href="https://github.com/scottmckendry/Windots/actions/workflows/sync.yml">
     <img alt="SyncStatus" src="https://img.shields.io/github/actions/workflow/status/scottmckendry/Windots/sync.yml?style=for-the-badge&logo=github&label=Sync%20to%20dots&color=%23bb9af7">

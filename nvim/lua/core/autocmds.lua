@@ -58,7 +58,7 @@ autocmd("FileType", {
     end,
 })
 
-autocmd({ "BufEnter", "BufWinEnter", "VimEnter", "FocusGained", "FocusLost" }, {
+autocmd("VimEnter", {
     callback = function()
         utils.update_python_lualine()
     end,

@@ -254,11 +254,9 @@ end
 -- Cache table
 local cache = {
     cached_value = "",
-    update_pending = false,
 }
 
--- Helper function to update the cache value
-local function update_cache_value()
+function M.update_python_lualine()
     local python_path = M.get_python_path()
     local python_version = M.get_python_version(python_path)
 
@@ -270,17 +268,6 @@ local function update_cache_value()
         cache.cached_value = string.format(".venv %s (%s)", python_version, folder_name)
     else
         cache.cached_value = python_version
-    end
-end
-
--- Function to update the cache with a delay
-function M.update_python_lualine()
-    if not cache.update_pending then
-        cache.update_pending = true
-        vim.defer_fn(function()
-            update_cache_value()
-            cache.update_pending = false
-        end, 3000)  -- 3000 milliseconds = 3 seconds
     end
 end
 

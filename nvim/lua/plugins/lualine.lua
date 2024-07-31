@@ -134,6 +134,9 @@ return {
                         icon = ' ',
                         color = { fg = '#ff8800', gui = 'bold' },
                         cond = function() return vim.bo.filetype == "python" end,
+                        on_click = function()
+                            vim.cmd("VenvSelect")
+                        end,
                     },
                     {
                         require("lazy.status").updates,

@@ -1,7 +1,7 @@
 return {
     "echasnovski/mini.icons",
     specs = {
-        { "nvim-tree/nvim-web-devicons", enabled = false, optional = true },
+        { "nvim-tree/nvim-web-devicons", enabled = true, optional = true },
     },
     config = function()
         require("mini.icons").setup()

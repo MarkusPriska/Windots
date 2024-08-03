@@ -10,7 +10,8 @@ function M.get_hlgroup(name, fallback)
 
         local hl = {
             fg = group.fg == nil and "NONE" or M.parse_hex(group.fg),
-            bg = group.bg == nil and "NONE" or M.parse_hex(group.bg),
+            -- bg = group.bg == nil and "NONE" or M.parse_hex(group.bg),
+            -- bg = "NONE",
         }
 
         return hl

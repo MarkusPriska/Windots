@@ -25,7 +25,7 @@ return {
             options = {
                 component_separators = { left = " ", right = " " },
                 section_separators = { left = " ", right = " " },
-                theme = "auto",
+                theme = "onedark",
                 globalstatus = true,
                 disabled_filetypes = { statusline = { "dashboard", "alpha" } },
             },
@@ -34,9 +34,9 @@ return {
                     {
                         "mode",
                         icon = "",
-                        fmt = function(mode)
-                            return mode:lower()
-                        end,
+                        -- fmt = function(mode)
+                        --     return mode:lower()
+                        -- end,
                     },
                 },
                 lualine_b = { { "branch", icon = "" } },
@@ -82,7 +82,7 @@ return {
                     },
                     {
                         "filename",
-                        padding = { left = 0, right = 0 },
+                        padding = { left = 0, right = 1 },
                         fmt = function(name)
                             if filetype_map[vim.bo.filetype] then
                                 return filetype_map[vim.bo.filetype].name
@@ -132,7 +132,7 @@ return {
                             return utils.get_python_lualine()
                         end,
                         icon = ' ',
-                        color = { fg = '#ff8800', gui = 'bold' },
+                        color = { fg = '#ff8800', gui = 'bold'},
                         cond = function() return vim.bo.filetype == "python" end,
                         on_click = function()
                             vim.cmd("VenvSelect")

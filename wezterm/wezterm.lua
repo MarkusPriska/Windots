@@ -18,12 +18,18 @@ config.font_size = 10.4
 config.initial_rows = 45
 config.initial_cols = 180
 config.window_decorations = "RESIZE"
-config.window_background_opacity = opacity
+-- config.window_background_opacity = opacity
 config.window_close_confirmation = "NeverPrompt"
-config.win32_system_backdrop = "Acrylic"
+-- config.win32_system_backdrop = "Acrylic"
 config.max_fps = 144
 config.animation_fps = 60
 config.cursor_blink_rate = 250
+config.window_padding = {
+  left = 2,
+  right = 2,
+  top = 0,
+  bottom = 0,
+}
 
 -- Colors
 config.colors = require("cyberdream")

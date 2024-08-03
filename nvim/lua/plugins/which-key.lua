@@ -8,7 +8,7 @@ return {
             icons = {
                 rules = false,
             },
-            win = { 
+            win = {
                 no_overlap = false,
             },
         })

@@ -67,7 +67,7 @@ return {
       open_files_do_not_replace_types = { "terminal", "Trouble", "trouble", "qf", "Outline" },
       filesystem = {
         bind_to_cwd = false,
-        follow_current_file = { enabled = true },
+        follow_current_file = { enabled = false },
         use_libuv_file_watcher = true,
       },
       window = {

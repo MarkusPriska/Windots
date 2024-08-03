@@ -15,7 +15,7 @@ require("lazy").setup({
     },
     install = {
         missing = true,
-        colorscheme = { "cyberdream" },
+        colorscheme = { "onedark" },
     },
     checker = { enabled = true },
     dev = {

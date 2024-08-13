@@ -18,18 +18,21 @@ return {
     },
     opts = {
         shade_terminals = true,
-        direction = "horizontal",
+        direction = "horizontal",  -- Default direction for terminals
         size = vim.o.lines * 0.3,
-        on_open = function(_)
-            local neo_tree_win = find_neo_tree_win()
-            if neo_tree_win then
-                vim.defer_fn(function()
-                    vim.cmd("Neotree toggle")
-                    vim.cmd("Neotree toggle")
-                    vim.cmd("wincmd p")
-                end, 100)
-            else
-                vim.print("Neo-tree window not found")
+        on_open = function(term)
+            -- Check if the terminal command is "lazygit"
+            if term.cmd ~= "lazygit" then
+                local neo_tree_win = find_neo_tree_win()
+                if neo_tree_win then
+                    vim.defer_fn(function()
+                        vim.cmd("Neotree toggle")
+                        vim.cmd("Neotree toggle")
+                        vim.cmd("wincmd p")
+                    end, 100)
+                else
+                    vim.print("Neo-tree window not found")
+                end
             end
         end,
     },

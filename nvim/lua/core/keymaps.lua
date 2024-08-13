@@ -127,12 +127,13 @@ map("n", "gy", function() require("telescope.builtin").lsp_type_definitions({ re
 map("t", "<esc>", [[<C-\><C-N>]], { desc = "Goto Normal Mode" })
 
 -- Lazygit
+-- Lazygit
 map("n", "<leader>gg", function()
     local term = require("toggleterm.terminal").Terminal
     local lazygit = term:new({
         cmd = "lazygit",
         dir = "git_dir",
-        direction = "tab",
+        direction = "float",  -- Changed from "tab" to "float"
     })
     lazygit:toggle()
 end, { desc = "Lazygit" })

@@ -25,10 +25,10 @@ config.max_fps = 144
 config.animation_fps = 60
 config.cursor_blink_rate = 250
 config.window_padding = {
-  left = 2,
-  right = 2,
-  top = 0,
-  bottom = 0,
+  left = 10,
+  right = 10,
+  top = 10,
+  bottom = 10,
 }
 
 -- Colors

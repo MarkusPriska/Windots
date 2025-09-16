@@ -7,7 +7,7 @@ local transparent_bg = "rgba(22, 24, 26, " .. opacity .. ")"
 -- Font
 config.font = wezterm.font_with_fallback({
     {
-        family = "SF Mono",
+        family = "SFMono Nerd Font",
         weight = "Bold",
     },
     "Segoe UI Emoji",
@@ -33,7 +33,9 @@ config.window_padding = {
 
 -- Colors
 config.colors = require("cyberdream")
-config.force_reverse_video_cursor = true
+config.force_reverse_video_cursor = false
+config.colors.cursor_bg = "#e5e5e5"  -- Light white cursor
+config.colors.cursor_fg = "#1a1b26"  -- Dark text on cursor
 
 -- Shell
 config.default_prog = { "pwsh", "-NoLogo" }

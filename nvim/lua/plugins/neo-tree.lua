@@ -1,138 +1,74 @@
-return {
-    "nvim-neo-tree/neo-tree.nvim",
-    cmd = "Neotree",
-    keys = {
-        {
-            "<leader>eE",
-            function()
-                require("neo-tree.command").execute({ dir = vim.fn.getcwd() })
-            end,
-            desc = "Explorer NeoTree (Root Dir)",
-        },
-        {
-            "<leader>ec",
-            function()
-                require("neo-tree.command").execute({ dir = vim.uv.cwd() })
-            end,
-            desc = "Explorer NeoTree (cwd)",
-        },
-        --   { "<leader>e", "<leader>eE", desc = "Explorer NeoTree (Root Dir)", remap = true },
-        --   { "<leader>e", "<leader>ec", desc = "Explorer NeoTree (cwd)", remap = true },
-        {
-            "<leader>eg",
-            function()
-                require("neo-tree.command").execute({ source = "git_status" })
-            end,
-            desc = "Git Explorer",
-        },
-        {
-            "<leader>eb",
-            function()
-                require("neo-tree.command").execute({ source = "buffers" })
-            end,
-            desc = "Buffer Explorer",
-        },
-        {
-            "<leader>eC",
-            function()
-                require("neo-tree.command").execute({ dir = vim.fn.stdpath("config") })
-            end,
-            desc = "Explorer NeoTree (Config Dir)",
-        },
-        {
-            "<leader>ex",
-            function()
-                -- Close neotree
-                vim.cmd([[Neotree close]])
-            end,
-        },
-    },
-    deactivate = function()
-        vim.cmd([[Neotree close]])
-    end,
-    init = function()
-        -- FIX: use `autocmd` for lazy-loading neo-tree instead of directly requiring it,
-        -- because `cwd` is not set up properly.
-        vim.api.nvim_create_autocmd("BufEnter", {
-            group = vim.api.nvim_create_augroup("Neotree_start_directory", { clear = true }),
-            desc = "Start Neo-tree with directory",
-            once = true,
-            callback = function()
-                if package.loaded["neo-tree"] then
-                    return
-                else
-                    local stats = vim.uv.fs_stat(vim.fn.argv(0))
-                    if stats and stats.type == "directory" then
-                        require("neo-tree")
-                    end
-                end
-            end,
-        })
-    end,
-    opts = {
-        sources = { "filesystem", "buffers", "git_status" },
-        open_files_do_not_replace_types = { "terminal", "Trouble", "trouble", "qf", "Outline" },
-        filesystem = {
-            bind_to_cwd = false,
-            follow_current_file = { enabled = false },
-            use_libuv_file_watcher = true,
-        },
-        window = {
-            mappings = {
-                ["l"] = "open",
-                ["h"] = "close_node",
-                ["<space>"] = "none",
-                ["Y"] = {
-                    function(state)
-                        local node = state.tree:get_node()
-                        local path = node:get_id()
-                        vim.fn.setreg("+", path, "c")
-                    end,
-                    desc = "Copy Path to Clipboard",
-                },
-                ["O"] = {
-                    function(state)
-                        require("lazy.util").open(state.tree:get_node().path, { system = true })
-                    end,
-                    desc = "Open with System Application",
-                },
-                ["P"] = { "toggle_preview", config = { use_float = false } },
-            },
-        },
-        default_component_configs = {
-            indent = {
-                with_expanders = true, -- if nil and file nesting is enabled, will enable expanders
-                expander_collapsed = "",
-                expander_expanded = "",
-                expander_highlight = "NeoTreeExpander",
-            },
-            git_status = {
-                symbols = {
-                    unstaged = "󰄱",
-                    staged = "󰱒",
-                },
-            },
-        },
-    },
-    config = function(_, opts)
-        local function on_move(data)
-            --   LazyVim.lsp.on_rename(data.source, data.destination)
-        end
+-- Neo-tree is a Neovim plugin to browse the file system
+-- https://github.com/nvim-neo-tree/neo-tree.nvim
 
-        local events = require("neo-tree.events")
-        opts.event_handlers = opts.event_handlers or {}
-        vim.list_extend(opts.event_handlers, {
-            { event = events.FILE_MOVED, handler = on_move },
-            { event = events.FILE_RENAMED, handler = on_move },
-        })
-        require("neo-tree").setup(opts)
-        vim.api.nvim_create_autocmd("TermClose", {
-            pattern = "*lazygit",
-            callback = function()
-                if package.loaded["neo-tree.sources.git_status"] then
-                    require("neo-tree.sources.git_status").refresh()
-                end
-            end,
-        })
-    end,
+return {
+  'nvim-neo-tree/neo-tree.nvim',
+  version = '*',
+  dependencies = {
+    'nvim-lua/plenary.nvim',
+    'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
+    'MunifTanjim/nui.nvim',
+  },
+  lazy = false,
+  keys = {
+    { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
+  },
+  config = function()
+    require("neo-tree").setup({
+      window = {
+        position = "float",
+        popup = {
+          position = { col = "5%", row = "10%" },
+          size = function(state)
+            local root_name = vim.fn.fnamemodify(state.path, ":~")
+            local root_len = string.len(root_name) + 4
+            return {
+              width = math.max(80, root_len),
+              height = vim.o.lines - 6
+            }
+          end,
+        },
+        mappings = {
+          ['\\'] = 'close_window',
+          ['l'] = 'open',
+          ['<esc>'] = 'close_window',
+        },
+      },
+      filesystem = {
+        filtered_items = {
+          visible = true,
+          hide_dotfiles = false,
+          hide_gitignored = false,
+        },
+      },
+      default_component_configs = {
+        git_status = {
+          symbols = {
+            -- Change type
+            added = "A",
+            modified = "M",
+            deleted = "D",
+            renamed = "R",
+            -- Status type
+            untracked = "U",
+            ignored = "!",
+            unstaged = "M",
+            staged = "A",
+            conflict = "E",
+          },
+          align = "right",
+        },
+      },
+    })
+
+    -- Custom Git status colors to match VS Code
+    vim.api.nvim_set_hl(0, "NeoTreeGitUntracked", { fg = "#6cbd8a" }) -- VS Code green
+    vim.api.nvim_set_hl(0, "NeoTreeGitModified", { fg = "#e0af68" })  -- Yellow like VS Code
+    vim.api.nvim_set_hl(0, "NeoTreeGitAdded", { fg = "#6cbd8a" })     -- Green for staged files
+    vim.api.nvim_set_hl(0, "NeoTreeGitDeleted", { fg = "#f7768e" })   -- Red for deleted files
+    vim.api.nvim_set_hl(0, "NeoTreeGitRenamed", { fg = "#7aa2f7" })   -- Blue for renamed files
+    vim.api.nvim_set_hl(0, "NeoTreeGitIgnored", { fg = "#565f89" })   -- Gray for ignored files
+    vim.api.nvim_set_hl(0, "NeoTreeGitConflict", { fg = "#f7768e" })  -- Red for conflicts
+    vim.api.nvim_set_hl(0, "NeoTreeGitUnstaged", { fg = "#f7768e" })  -- Red for unstaged changes
+  end,
 }

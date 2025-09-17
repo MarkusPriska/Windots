@@ -1,107 +1,68 @@
 return {
-   "nvim-lualine/lualine.nvim",
+    "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
-    dependencies = { "echasnovski/mini.icons" },
+    dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = function()
-        local utils = require("core.utils")
-        local api = require("supermaven-nvim.api")
+        -- Helper function to get highlight group
+        local function get_hlgroup(name, fallback)
+            if vim.fn.hlexists(name) == 1 then
+                local group = vim.api.nvim_get_hl(0, { name = name })
+                return {
+                    fg = group.fg and string.format("#%06x", group.fg) or "NONE",
+                    bg = group.bg and string.format("#%06x", group.bg) or "NONE",
+                }
+            end
+            return fallback or {}
+        end
 
-        local supermaven_colors = {
-            [""] = utils.get_hlgroup("Comment"),
-            ["Normal"] = utils.get_hlgroup("Comment"),
-            ["Warning"] = utils.get_hlgroup("DiagnosticError"),
-            ["InProgress"] = utils.get_hlgroup("DiagnosticWarn"),
-        }
+        -- Helper function to get buffer count
+        local function get_buffer_count()
+            local count = 0
+            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                if vim.fn.bufname(buf) ~= "" then
+                    count = count + 1
+                end
+            end
+            return count
+        end
 
-        local filetype_map = {
-            lazy = { name = "lazy.nvim", icon = "💤" },
-            minifiles = { name = "minifiles", icon = "🗂️ " },
-            toggleterm = { name = "terminal", icon = "🐚" },
-            mason = { name = "mason", icon = "🔨" },
-            TelescopePrompt = { name = "telescope", icon = "🔍" },
+        local copilot_colors = {
+            [""] = get_hlgroup("Comment"),
+            ["Normal"] = get_hlgroup("Comment"),
+            ["Warning"] = get_hlgroup("DiagnosticError"),
+            ["InProgress"] = get_hlgroup("DiagnosticWarn"),
         }
 
         return {
             options = {
                 component_separators = { left = " ", right = " " },
                 section_separators = { left = " ", right = " " },
-                theme = "onedark",
+                theme = "auto",
                 globalstatus = true,
                 disabled_filetypes = { statusline = { "dashboard", "alpha" } },
             },
             sections = {
-                lualine_a = {
-                    {
-                        "mode",
-                        icon = "",
-                        -- fmt = function(mode)
-                        --     return mode:lower()
-                        -- end,
-                    },
-                },
-                lualine_b = { { "branch", icon = "" } },
+                lualine_a = { { "mode", icon = "" } },
+                lualine_b = { "branch" },
                 lualine_c = {
                     {
                         "diagnostics",
                         symbols = {
-                            error = " ",
-                            warn = " ",
-                            info = " ",
-                            hint = "󰝶 ",
+                            error = "󰅚 ",
+                            warn = "󰀪 ",
+                            info = "󰋽 ",
+                            hint = "󰌶 ",
                         },
                     },
-                    {
-                        function()
-                            local devicons = require("nvim-web-devicons")
-                            local ft = vim.bo.filetype
-                            local icon
-                            if filetype_map[ft] then
-                                return " " .. filetype_map[ft].icon
-                            end
-                            if icon == nil then
-                                icon = devicons.get_icon(vim.fn.expand("%:t"))
-                            end
-                            if icon == nil then
-                                icon = devicons.get_icon_by_filetype(ft)
-                            end
-                            if icon == nil then
-                                icon = " 󰈤"
-                            end
-
-                            return icon .. " "
-                        end,
-                        color = function()
-                            local _, hl = require("nvim-web-devicons").get_icon(vim.fn.expand("%:t"))
-                            if hl then
-                                return hl
-                            end
-                            return utils.get_hlgroup("Normal")
-                        end,
-                        separator = "",
-                        padding = { left = 0, right = 0 },
-                    },
-                    {
-                        "filename",
-                        padding = { left = 0, right = 1 },
-                        fmt = function(name)
-                            if filetype_map[vim.bo.filetype] then
-                                return filetype_map[vim.bo.filetype].name
-                            else
-                                return name
-                            end
-                        end,
-                    },
-                    {
-                        function()
-                            local buffer_count = require("core.utils").get_buffer_count()
-
-                            return "+" .. buffer_count - 1 .. " "
-                        end,
-                        cond = function()
-                            return require("core.utils").get_buffer_count() > 1
-                        end,
-                        color = utils.get_hlgroup("Operator", nil),
-                        padding = { left = 0, right = 1 },
+                    { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
+                    { "filename", 
+                        path = 1, -- 0 = filename only, 1 = relative path, 2 = absolute path, 3 = absolute with tilde
+                        padding = { left = 1, right = 0 },
+                        symbols = { 
+                            modified = '', 
+                            readonly = '', 
+                            unnamed = '' 
+                        }
                     },
                     {
                         function()
@@ -114,54 +75,56 @@ return {
                             return vim.fn.tabpagenr("$") > 1
                         end,
                         icon = "󰓩",
-                        color = utils.get_hlgroup("Special", nil),
-                    },
-                    {
-                        function()
-                            return require("nvim-navic").get_location()
-                        end,
-                        cond = function()
-                            return package.loaded["nvim-navic"] and require("nvim-navic").is_available()
-                        end,
-                        color = utils.get_hlgroup("Comment", nil),
+                        color = get_hlgroup("Special", nil),
                     },
                 },
                 lualine_x = {
                     {
                         function()
-                            return utils.get_python_lualine()
+                            local venv = vim.env.VIRTUAL_ENV
+                            if venv then
+                                local venv_name = vim.fn.fnamemodify(venv, ":t")
+                                return "󰌠 " .. venv_name
+                            end
+                            -- Check if venv-selector has a cached venv
+                            local ok, venv_selector = pcall(require, "venv-selector")
+                            if ok then
+                                local venv_path = venv_selector.get_active_venv()
+                                if venv_path then
+                                    local venv_name = vim.fn.fnamemodify(venv_path, ":h:t")
+                                    return "󰌠 " .. venv_name
+                                end
+                            end
+                            return ""
                         end,
-                        icon = ' ',
-                        color = { fg = '#ff8800', gui = 'bold'},
-                        cond = function() return vim.bo.filetype == "python" end,
-                        on_click = function()
-                            vim.cmd("VenvSelect")
+                        cond = function()
+                            return vim.bo.filetype == "python"
                         end,
+                        color = get_hlgroup("Function"),
                     },
                     {
                         require("lazy.status").updates,
                         cond = require("lazy.status").has_updates,
-                        color = utils.get_hlgroup("String"),
+                        color = get_hlgroup("String"),
                     },
                     {
                         function()
-                            local icon = " "
-                            return icon
+                            local icon = "󰚩 "
+                            local status = require("copilot.api").status.data
+                            return icon .. (status.message or "")
                         end,
                         cond = function()
-                            local is_loaded = api.is_running()
-                            return is_loaded
+                            local ok, clients = pcall(vim.lsp.get_clients, { name = "copilot", bufnr = 0 })
+                            return ok and #clients > 0
                         end,
                         color = function()
-                            if not package.loaded["supermaven-nvim"] then
-                                require("notify")("Supermaven is not loaded", "info", { title = "Supermaven" })
+                            if not package.loaded["copilot"] then
                                 return
                             end
-                            local status = api.is_running() and "Normal" or "Warning"
-                            return supermaven_colors[status] or supermaven_colors[""]
+                            local status = require("copilot.api").status.data
+                            return copilot_colors[status.status] or copilot_colors[""]
                         end,
                     },
-                    { "diff" },
                 },
                 lualine_y = {
                     {
@@ -169,16 +132,18 @@ return {
                     },
                     {
                         "location",
-                        color = utils.get_hlgroup("Boolean"),
+                        color = get_hlgroup("Boolean"),
                     },
                 },
                 lualine_z = {
                     {
                         "datetime",
-                        style = "  %X",
+                        style = "󰥔 %X",
                     },
                 },
             },
+
+            extensions = { "lazy", "toggleterm", "mason", "neo-tree", "trouble" },
         }
     end,
 }

@@ -191,18 +191,21 @@ return {
       lua_ls = {},
     }
 
-    -- Ensure the servers and tools above are installed
-    local ensure_installed = vim.tbl_keys(servers or {})
-    vim.list_extend(ensure_installed, {
-      'stylua', -- Used to format Lua code
-    })
-    
-    -- Setup mason-tool-installer to ensure tools are installed
-    require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+    -- Define formatters and other tools to install
+    local formatters = {
+      'stylua',
+      'ruff',      -- Python formatter
+      'prettier',  -- JS/TS/React formatter
+    }
 
     -- Setup mason-lspconfig to ensure LSP servers are installed
     require('mason-lspconfig').setup {
       ensure_installed = vim.tbl_keys(servers),
+    }
+
+    -- Setup mason-tool-installer for non-LSP tools only
+    require('mason-tool-installer').setup {
+      ensure_installed = formatters
     }
 
     -- Global LSP config for all servers (following williamboman's pattern)
@@ -211,6 +214,9 @@ return {
     })
 
     -- Server-specific configurations using the new API
+    -- Typescript/Javascript
+    vim.lsp.config.ts_ls = {}
+
     -- Basedpyright
     vim.lsp.config.basedpyright = {
       settings = {

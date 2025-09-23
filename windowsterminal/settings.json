@@ -93,35 +93,6 @@
                 "name": "PowerShell",
                 "source": "Windows.Terminal.PowershellCore"
             },
-            {
-                "colorScheme": "cyberdream",
-                "font": 
-                {
-                    "face": "SFMono Nerd Font"
-                },
-                "guid": "{2c4de342-38b7-51cf-b940-2309a097f518}",
-                "hidden": false,
-                "name": "Ubuntu",
-                "source": "Windows.Terminal.Wsl"
-            },
-            {
-                "guid": "{d7035207-ed57-5693-9c0a-d21200a9a7ff}",
-                "hidden": false,
-                "name": "Developer Command Prompt for VS 2022 (2)",
-                "source": "Windows.Terminal.VisualStudio"
-            },
-            {
-                "guid": "{2054d00d-2987-5ddd-83e2-5361c71a8246}",
-                "hidden": false,
-                "name": "Developer PowerShell for VS 2022 (2)",
-                "source": "Windows.Terminal.VisualStudio"
-            },
-            {
-                "guid": "{2ece5bfe-50ed-5f3a-ab87-5cd4baafed2b}",
-                "hidden": false,
-                "name": "Git Bash",
-                "source": "Git"
-            }
         ]
     },
     "schemes": 

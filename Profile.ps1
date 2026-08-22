@@ -401,6 +401,9 @@ $ENV:OBSIDIAN_PATH = "$HOME\iCloudDrive\iCloud~md~obsidian\Obsidian"
 $ENV:BAT_CONFIG_DIR = "$ENV:WindotsLocalRepo\bat"
 $ENV:FZF_DEFAULT_OPTS = '--color=fg:-1,fg+:#ffffff,bg:-1,bg+:#3c4048 --color=hl:#5ea1ff,hl+:#5ef1ff,info:#ffbd5e,marker:#5eff6c --color=prompt:#ff5ef1,spinner:#bd5eff,pointer:#ff5ea0,header:#5eff6c --color=gutter:-1,border:#3c4048,scrollbar:#7b8496,label:#7b8496 --color=query:#ffffff --border="rounded" --border-label="" --preview-window="border-rounded" --height 40% --preview="bat -n --color=always {}"'
 
+# Scripted callers would otherwise block until the winget/choco jobs release stdout
+if ([Console]::IsInputRedirected -or [Console]::IsOutputRedirected) { return }
+
 # Check for Windots and software updates while prompt is loading
 Start-ThreadJob -ScriptBlock {
     Set-Location -Path $ENV:WindotsLocalRepo
